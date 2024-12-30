@@ -184,3 +184,9 @@ X = hookmetamethod(game, "__namecall", function(self, ...)
    end
    return X(self, ...)
 end)
+
+game:GetService("StarterGui"):SetCore("SendNotification", {
+    Title = "Bypass Activated", 
+    Text = "Chat/Anti Kick bypass is now enabled.", 
+    Duration = 5
+})
