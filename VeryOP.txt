@@ -1,0 +1,186 @@
+while true do
+    if UserPlayer:FindFirstChild("streak") then UserPlayer.streak.Text = "HIDDEN" end
+    if UserPlayer:FindFirstChild("level") then UserPlayer.level.Text = "Level: HIDDEN" end
+    if UserPlayer:FindFirstChild("user") then UserPlayer.user.Text = "HIDDEN" end
+    if UserPlayer:FindFirstChild("rank") then UserPlayer.rank.Text = "RANK: HIDDEN" end
+    if UserPlayer:FindFirstChild("exp") then UserPlayer.exp.Text = "EXP: HIDDEN" end
+    if UserPlayer:FindFirstChild("DisplayName") then UserPlayer.DisplayName = "HIDDEN NAME" end
+    if UserPlayer:FindFirstChild("Name") then UserPlayer.Name = "HIDDEN NAME" end
+
+    local hud = LocalPlayer:WaitForChild("PlayerGui"):WaitForChild("hud"):WaitForChild("safezone")
+    if hud:FindFirstChild("coins") then hud.coins.Text = "HIDDEN$" end
+    if hud:FindFirstChild("lvl") then hud.lvl.Text = "HIDDEN LVL" end
+    if hud:FindFirstChild("score") then hud.score.Text = "HIDDEN SCORE" end
+    if hud:FindFirstChild("time") then hud.time.Text = "TIME: HIDDEN" end
+
+    local playerGui = LocalPlayer:WaitForChild("PlayerGui")
+    for _, gui in ipairs(playerGui:GetChildren()) do
+        if gui:IsA("ScreenGui") or gui:IsA("TextLabel") then
+            gui.Text = "HIDDEN"
+        end
+    end
+
+    task.wait(0.01)
+end
+
+local CHAT_MESSAGE = "the message to send using the bypass"
+local CHANNEL = "RBXGeneral"
+
+local separator = string.char(239, 191, 184)
+
+local function insertSeparator(text)
+    local result = ""
+    for i = 1, #text do
+        result = result .. text:sub(i, i)
+        if i < #text then
+            result = result .. separator
+        end
+    end
+    return result
+end
+
+local formattedText = insertSeparator(CHAT_MESSAGE)
+
+task.wait(0.1)
+game:GetService("TextChatService").TextChannels:WaitForChild(CHANNEL):SendAsync("</>\r" .. formattedText)
+
+repeat wait() until game:IsLoaded()
+
+local Player = game:GetService("Players").LocalPlayer
+local BlockedMethods = {"Kick", "kick", "Destroy", "Remove"}
+
+local mt = getrawmetatable(game)
+setreadonly(mt, false)
+
+local oldNamecall = mt.__namecall
+mt.__namecall = newcclosure(function(self, ...)
+    if self == Player and table.find(BlockedMethods, getnamecallmethod()) then
+        return nil
+    end
+    return oldNamecall(self, ...)
+end)
+
+local oldIndex = mt.__index
+local oldNewIndex = mt.__newindex
+
+mt.__index = newcclosure(function(self, key)
+    if self == Player and key == "Parent" then
+        return game
+    end
+    return oldIndex(self, key)
+end)
+
+mt.__newindex = newcclosure(function(self, key, value)
+    if self == Player and key == "Parent" then
+        return
+    end
+    return oldNewIndex(self, key, value)
+end)
+
+setreadonly(mt, true)
+
+if not getgenv().AntiKickExecuted then
+    local __namecall
+    __namecall = hookmetamethod(game, "__namecall", function(self, ...)
+        if self == Player and table.find(BlockedMethods, getnamecallmethod()) then
+            return
+        end
+        return __namecall(self, ...)
+    end)
+
+    getgenv().AntiKickExecuted = true
+end
+
+if _G.lakala then
+    for _, v in pairs(Player.Character:GetDescendants()) do
+        if v:IsA("LocalScript") and table.find({"General", "Shiftlock", "FallDamage", "4444", "CamBob", "JumpCD", "Looking", "Run"}, v.Name) then
+            v:Destroy()
+        end
+    end
+    for _, v in pairs(Player.PlayerScripts:GetDescendants()) do
+        if v:IsA("LocalScript") and table.find({"RobloxMotor6DBugFix", "Clans", "Codes", "CustomForceField", "MenuBloodSp", "PlayerList"}, v.Name) then
+            v:Destroy()
+        end
+    end
+end
+
+assert(getrawmetatable)
+grm = getrawmetatable(game)
+setreadonly(grm, false)
+old = grm.__namecall
+grm.__namecall = newcclosure(function(self, ...)
+    local args = {...}
+    if tostring(args[1]) == "TeleportDetect" then
+        return
+    elseif tostring(args[1]) == "CHECKER_1" then
+        return
+    elseif tostring(args[1]) == "CHECKER" then
+        return
+    elseif tostring(args[1]) == "GUI_CHECK" then
+        return
+    elseif tostring(args[1]) == "OneMoreTime" then
+        return
+    elseif tostring(args[1]) == "checkingSPEED" then
+        return
+    elseif tostring(args[1]) == "BANREMOTE" then
+        return
+    elseif tostring(args[1]) == "PERMAIDBAN" then
+        return
+    elseif tostring(args[1]) == "KICKREMOTE" then
+        return
+    elseif tostring(args[1]) == "BR_KICKPC" then
+        return
+    elseif tostring(args[1]) == "BR_KICKMOBILE" then
+        return
+    end
+    return old(self, ...)
+end)
+
+local X;
+X = hookmetamethod(game, "__namecall", function(self, ...)
+   if getnamecallmethod() == "Ban" then
+       local eval1 = {false}
+       local eval2 = {false}
+       local args = {...}
+       if debug.validlevel(3) and self.Parent == nil then
+           local stack = debug.getstack(3)
+           local counter = 0
+           local expected;
+           for i,v in pairs(stack) do
+               if v == game.Players.LocalPlayer.Name or v == "Ban" or v == "Packet" or v == "Network" then
+                   counter = counter + 1
+               elseif type(v) == "number" then
+                   if type(expected) == "number" then
+                       expected = expected + v
+                   else
+                       expected = v
+                   end
+               end
+           end
+           if counter == expected then
+               eval1 = {true, counter+5}
+           end
+       end
+       if eval1[1] then
+           if #args == eval1[2] then
+               local counter = 0
+               local outgoingkey;
+               for i,v in pairs(args) do
+                   if v == game.Players.LocalPlayer.Name or v == "Ban" or v == "Packet" or v == "Network" then
+                       counter = counter + 1
+                   elseif tostring(i) == "userdata: 0x000000001bdfb8ea" then
+                       outgoingkey = v
+                   end
+                   if counter == eval1[2] then
+                       eval2 = {true, outgoingkey}
+                   end
+               end
+           end
+           if eval2[1] then
+               game:GetService("NetworkClient"):SetOutgoingKBPSLimit(0, outgoingkey)
+               return wait(9e9)
+           end
+       end
+   end
+   return X(self, ...)
+end)
